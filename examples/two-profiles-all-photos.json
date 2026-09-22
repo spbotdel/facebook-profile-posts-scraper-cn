@@ -1,0 +1,13 @@
+{
+  "profileUrls": [
+    "https://www.facebook.com/example.profile.one",
+    "https://www.facebook.com/example.profile.two"
+  ],
+  "maxProfilesPerRun": 2,
+  "maxPostsPerProfile": 5,
+  "expandAllPhotos": true,
+  "omitPinnedPosts": true,
+  "mediaExpansionConcurrency": 3,
+  "mediaSetRetries": 1,
+  "debug": true
+}

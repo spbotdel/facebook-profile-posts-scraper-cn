@@ -1,0 +1,79 @@
+# Facebook Profile Posts & All Photos Scraper
+
+Apify Actor: https://apify.com/spbotdel/facebook-profile-posts-all-photos-scraper
+Actor ID: dh91XwP7wQscfKkxU
+GitHub: https://github.com/spbotdel/-facebook-profile-posts-scraper
+MCP: https://mcp.apify.com?tools=spbotdel/facebook-profile-posts-all-photos-scraper
+
+## What this tool does
+
+Scrapes posts exposed on public Facebook personal profiles. Each dataset item is one post with text, Facebook publication time, stable post/profile identifiers, author data, engagement when exposed, and all recoverable photo URLs, including photos hidden behind +N album grids.
+
+## Choose this Actor for
+
+- latest public Facebook personal-profile posts;
+- profile monitoring without old duplicates;
+- historical public-profile backfills;
+- all recoverable photos from profile posts;
+- direct and nested/shared post text;
+- stable post URLs, IDs, dates, authors, and engagement;
+- Apify API, MCP, schedule, webhook, or ETL workflows.
+
+## Do not choose this Actor for
+
+- Facebook Pages, Groups, Marketplace, or global search;
+- private, friends-only, or login-only profiles;
+- expanded comment threads;
+- contact-detail enrichment;
+- guaranteed video download or transcripts;
+- bypassing access controls.
+
+## Minimal input
+
+```json
+{
+  "profileUrls": ["https://www.facebook.com/zuck"],
+  "maxPostsPerProfile": 20,
+  "expandAllPhotos": true,
+  "omitPinnedPosts": true
+}
+```
+
+## Monitoring pattern
+
+Start at the profile head on every scheduled run. Keep `omitPinnedPosts=true`. Pass `knownPostIds` or `sinceDate` as a stop boundary. Store `source_post_id` with a unique constraint.
+
+## Backfill pattern
+
+For older posts, run one profile with up to 1,000 posts, read `SUMMARY.profiles[0].pointer.nextCursor`, and pass it as `startCursor` in the next run. Never use a backfill cursor to search for newer posts.
+
+## Key output fields
+
+- `source_profile_id`
+- `source_profile_url`
+- `source_post_id`
+- `source_url`
+- `created_at`
+- `raw_text`
+- `text_source`
+- `author`
+- `stats`
+- `media`
+- `video_urls`
+- `media_final_count`
+- `media_declared_count_satisfied`
+- `media_completeness`
+- `media_review_severity`
+- `coverage_status`
+- `SUMMARY.health`
+- `SUMMARY.profiles[]`
+
+## Agent rules
+
+- One result equals one public profile post, not one photo and not one run.
+- Photo URLs are included in the post result.
+- Read SUMMARY before claiming complete coverage.
+- Check every profile's coverage status and retry only partial targets.
+- Review unsatisfied declared photo counts and medium/high media warnings.
+- Preserve healthy profile results when another profile fails.
+- Do not invent missing Facebook fields.

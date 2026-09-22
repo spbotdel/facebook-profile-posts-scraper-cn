@@ -1,0 +1,237 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "record_type": {
+        "type": "string",
+        "description": "Dataset record type; post rows use post."
+      },
+      "source_platform": {
+        "type": "string",
+        "description": "Source platform, normally facebook."
+      },
+      "provider": {
+        "type": "string",
+        "description": "Normalized provider identifier."
+      },
+      "rank": {
+        "type": "integer",
+        "description": "One-based result order within the profile run."
+      },
+      "source_profile_id": {
+        "type": ["string", "null"],
+        "description": "Resolved numeric Facebook profile ID."
+      },
+      "source_profile_url": {
+        "type": "string",
+        "description": "Public Facebook profile URL."
+      },
+      "source_profile_name": {
+        "type": ["string", "null"],
+        "description": "Public Facebook profile display name."
+      },
+      "source_profile_type": {
+        "type": ["string", "null"],
+        "description": "Resolved profile-target type."
+      },
+      "source_post_id": {
+        "type": ["string", "null"],
+        "description": "Stable Facebook post ID when exposed."
+      },
+      "source_url": {
+        "type": ["string", "null"],
+        "description": "Public Facebook post URL."
+      },
+      "created_at": {
+        "type": ["string", "null"],
+        "format": "date-time",
+        "description": "Facebook publication time as ISO 8601, not scrape time."
+      },
+      "created_at_source": {
+        "type": ["string", "null"],
+        "description": "Timestamp provenance, normally graphql_creation_time."
+      },
+      "created_at_precision": {
+        "type": ["string", "null"],
+        "description": "Precision classification for the publication timestamp."
+      },
+      "creation_time": {
+        "type": ["number", "null"],
+        "description": "Raw Facebook Unix publication timestamp in seconds."
+      },
+      "raw_text": {
+        "type": "string",
+        "description": "Best recovered direct or nested post body."
+      },
+      "text_source": {
+        "type": "string",
+        "description": "Text extraction source such as direct_message or fallback_nested_message."
+      },
+      "text_missing_reason": {
+        "type": ["string", "null"],
+        "description": "Diagnostic reason when no body text was exposed."
+      },
+      "text_candidates": {
+        "type": "array",
+        "description": "Ranked text candidates retained for audit.",
+        "items": { "type": "object" }
+      },
+      "author": {
+        "type": "object",
+        "description": "Public author identity when exposed.",
+        "properties": {
+          "source_user_id": { "type": ["string", "null"] },
+          "name": { "type": ["string", "null"] },
+          "url": { "type": ["string", "null"] }
+        }
+      },
+      "stats": {
+        "type": "object",
+        "description": "Best-effort public reactions, comments, and shares counters.",
+        "properties": {
+          "reactions": { "type": ["integer", "null"] },
+          "comments": { "type": ["integer", "null"] },
+          "shares": { "type": ["integer", "null"] }
+        }
+      },
+      "media": {
+        "type": "array",
+        "description": "Final recovered public photo objects.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "source_media_id": { "type": ["string", "null"] },
+            "media_type": { "type": "string" },
+            "source_url": { "type": "string" },
+            "thumbnail_url": { "type": ["string", "null"] },
+            "width": { "type": ["integer", "null"] },
+            "height": { "type": ["integer", "null"] },
+            "source": { "type": "string" },
+            "index": { "type": "integer" }
+          }
+        }
+      },
+      "video_urls": {
+        "type": "array",
+        "description": "Best-effort direct video media URLs when exposed.",
+        "items": { "type": "string" }
+      },
+      "media_set_tokens": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "media_preview_count": {
+        "type": "integer",
+        "description": "Valid photo URLs exposed in the timeline payload."
+      },
+      "media_expanded_count": {
+        "type": "integer",
+        "description": "Valid photo URLs recovered through media expansion."
+      },
+      "media_final_count": {
+        "type": "integer",
+        "description": "Final number of photo objects returned in media."
+      },
+      "media_declared_count": {
+        "type": ["integer", "null"],
+        "description": "Album attachment count declared by Facebook when exposed."
+      },
+      "media_declared_count_satisfied": {
+        "type": ["boolean", "null"],
+        "description": "Whether final recovered photos meet Facebook's declared count."
+      },
+      "media_completeness": {
+        "type": "string",
+        "description": "Media expansion and completeness outcome."
+      },
+      "media_completeness_legacy": {
+        "type": ["string", "null"]
+      },
+      "media_review_severity": {
+        "type": "string",
+        "description": "Media audit signal: none, low, medium, or high."
+      },
+      "media_plus_n_risk": {
+        "type": "boolean",
+        "description": "True when Facebook likely hid more photos than were recovered."
+      },
+      "media_counts": { "type": ["object", "null"] },
+      "media_source": { "type": ["string", "null"] },
+      "media_complete_confidence": { "type": ["string", "null"] },
+      "media_expansion": { "type": ["object", "null"] },
+      "coverage_status": {
+        "type": "string",
+        "description": "Reason collection stopped for the row's profile."
+      },
+      "warnings": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "raw_payload_json": {
+        "type": ["object", "null"],
+        "description": "Optional parsed source payload when includeRawPayload is enabled."
+      }
+    },
+    "required": [
+      "record_type",
+      "source_platform",
+      "provider",
+      "rank",
+      "source_profile_url",
+      "raw_text",
+      "media",
+      "media_final_count",
+      "media_completeness",
+      "coverage_status"
+    ]
+  },
+  "views": {
+    "posts": {
+      "title": "Posts",
+      "description": "Public Facebook personal-profile posts with text, timestamps, stable URLs, engagement, and photo-completeness diagnostics.",
+      "transformation": {
+        "fields": [
+          "rank",
+          "source_profile_name",
+          "created_at",
+          "source_post_id",
+          "raw_text",
+          "text_source",
+          "author",
+          "stats",
+          "media_preview_count",
+          "media_final_count",
+          "media_declared_count",
+          "media_declared_count_satisfied",
+          "media_review_severity",
+          "media_completeness",
+          "coverage_status",
+          "source_url"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "rank": { "label": "Rank" },
+          "source_profile_name": { "label": "Profile" },
+          "created_at": { "label": "Published" },
+          "source_post_id": { "label": "Post ID" },
+          "raw_text": { "label": "Post text", "format": "text" },
+          "text_source": { "label": "Text source" },
+          "author": { "label": "Author" },
+          "stats": { "label": "Engagement" },
+          "media_preview_count": { "label": "Preview photos" },
+          "media_final_count": { "label": "Final photos" },
+          "media_declared_count": { "label": "Declared photos" },
+          "media_declared_count_satisfied": { "label": "Declared count met" },
+          "media_review_severity": { "label": "Media review" },
+          "media_completeness": { "label": "Media status" },
+          "coverage_status": { "label": "Coverage" },
+          "source_url": { "label": "Post URL", "format": "link" }
+        }
+      }
+    }
+  }
+}

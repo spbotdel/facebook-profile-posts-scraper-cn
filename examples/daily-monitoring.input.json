@@ -1,0 +1,11 @@
+{
+  "profileUrls": [
+    "https://www.facebook.com/zuck"
+  ],
+  "maxPostsPerProfile": 100,
+  "knownPostIds": [
+    "LAST_SEEN_POST_ID"
+  ],
+  "expandAllPhotos": true,
+  "omitPinnedPosts": true
+}

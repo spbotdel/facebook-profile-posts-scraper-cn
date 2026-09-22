@@ -1,0 +1,31 @@
+{
+  "name": "facebook-profile-posts-cn",
+  "version": "0.1.0",
+  "description": "Apify Actor：采集 Facebook 公开个人主页帖子与全部可获取照片链接、发布时间、作者、互动数据，输出机器可读 JSON。",
+  "type": "module",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "node src/main.js",
+    "backfill:profile": "node scripts/backfill-profile.mjs",
+    "check": "node --check src/main.js && node --check src/charging.js && node --check src/facebook.js && node --check src/postParser.js && node --check src/mediaExpansion.js && node --check src/profileRetry.js && node --check scripts/backfill-profile.mjs",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "apify": "^3.4.0",
+    "got-scraping": "^4.1.2",
+    "html-entities": "^2.6.0",
+    "tough-cookie": "^5.1.2"
+  },
+  "devDependencies": {},
+  "homepage": "https://apify.com/spbotdel/facebook-profile-posts-cn",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spbotdel/facebook-profile-posts-scraper-cn.git"
+  },
+  "bugs": {
+    "url": "https://github.com/spbotdel/facebook-profile-posts-scraper-cn/issues"
+  }
+}

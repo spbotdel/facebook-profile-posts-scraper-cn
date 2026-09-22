@@ -1,0 +1,18 @@
+{
+  "actorSpecification": 1,
+  "name": "facebook-profile-posts-cn",
+  "title": "Facebook 个人主页帖子与完整照片集抓取",
+  "description": "抓取 Facebook 公开个人主页的最新与历史帖子，输出机器可读的 JSON 数据：正文、发布时间、作者、互动数据、稳定帖子链接，以及全部可获取的照片链接（含隐藏的 +N 照片集）。支持 Apify API、MCP、日常监控与历史回填。",
+  "version": "0.1",
+  "defaultMemoryMbytes": 1024,
+  "minMemoryMbytes": 512,
+  "maxMemoryMbytes": 1024,
+  "build": {
+    "dockerfile": "../Dockerfile"
+  },
+  "input": "./input_schema.json",
+  "output": "./output_schema.json",
+  "storages": {
+    "dataset": "./dataset_schema.json"
+  }
+}

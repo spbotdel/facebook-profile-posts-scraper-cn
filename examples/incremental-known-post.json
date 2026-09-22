@@ -1,0 +1,13 @@
+{
+  "profileUrls": [
+    "https://www.facebook.com/example.profile"
+  ],
+  "maxProfilesPerRun": 1,
+  "maxPostsPerProfile": 20,
+  "knownPostIds": [
+    "1234567890123456"
+  ],
+  "expandAllPhotos": false,
+  "omitPinnedPosts": true,
+  "debug": true
+}

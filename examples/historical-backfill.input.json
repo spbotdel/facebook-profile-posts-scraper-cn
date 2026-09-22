@@ -1,0 +1,9 @@
+{
+  "profileUrls": [
+    "https://www.facebook.com/zuck"
+  ],
+  "maxPostsPerProfile": 1000,
+  "startCursor": "PREVIOUS_SUMMARY_POINTER_NEXT_CURSOR",
+  "expandAllPhotos": true,
+  "omitPinnedPosts": false
+}

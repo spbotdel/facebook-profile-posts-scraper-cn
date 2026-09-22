@@ -1,0 +1,172 @@
+{
+  "title": "Facebook 个人主页帖子与完整照片抓取",
+  "description": "Collect latest or historical posts exposed on public Facebook personal profiles without supplying Facebook cookies or login credentials. Each dataset result is one post with direct or nested text, Facebook publication time, stable identifiers, author data, engagement when available, and all recoverable photo URLs, including hidden +N albums. Supports agent-ready API/MCP output, newest-post monitoring, per-profile isolation, and resumable historical backfills. Private, friends-only, Pages, Groups, Marketplace, and login-only content are not accessed.",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "profileUrls": {
+      "title": "个人主页链接",
+      "type": "array",
+      "description": "必填。公开 Facebook 个人主页的链接、个性化主页地址、数字 ID、profile.php?id=... 链接或 /people/.../<id> 链接。请勿填写公共主页、小组、Marketplace 链接或私密/需登录的个人主页。一次运行最多处理 maxProfilesPerRun 个个人主页。",
+      "editor": "stringList",
+      "sectionCaption": "Profiles and post volume",
+      "prefill": [
+        "https://www.facebook.com/zuck"
+      ],
+      "items": {
+        "type": "string"
+      }
+    },
+    "maxProfilesPerRun": {
+      "title": "每次运行的个人主页数量",
+      "type": "integer",
+      "description": "一次运行中独立处理的个人主页数量上限。超出部分的 profileUrls 将被跳过，并在 SUMMARY 中报告。",
+      "editor": "number",
+      "unit": "profiles",
+      "default": 10,
+      "minimum": 1,
+      "maximum": 20
+    },
+    "maxPostsPerProfile": {
+      "title": "每个个人主页的最大帖子数",
+      "type": "integer",
+      "description": "每个个人主页最多返回的公开帖子数量。首次测试或日常监控建议填小数字；如需更深历史，一次最多取 1000 条，再用下一个游标继续。",
+      "editor": "number",
+      "unit": "posts",
+      "default": 20,
+      "minimum": 1,
+      "maximum": 1000
+    },
+    "expandAllPhotos": {
+      "title": "展开全部照片",
+      "type": "boolean",
+      "description": "尽力还原藏在 Facebook +N 相册后面的公开照片链接。建议保持开启以获得完整数据；仅在快速预览时关闭。",
+      "editor": "checkbox",
+      "default": true,
+      "sectionCaption": "Photos and newest-post behavior"
+    },
+    "omitPinnedPosts": {
+      "title": "忽略置顶帖子",
+      "type": "boolean",
+      "description": "排除个人主页顶部固定的旧置顶帖，让最新帖采集与定时监控更可预测。",
+      "editor": "checkbox",
+      "default": true
+    },
+    "sinceDate": {
+      "title": "起始日期",
+      "type": "string",
+      "description": "可选的监控边界。从个人主页头部开始，遇到早于该日期的帖子即停止。请使用 ISO 日期或时间戳。",
+      "editor": "datepicker",
+      "sectionCaption": "Incremental monitoring"
+    },
+    "knownPostIds": {
+      "title": "已知帖子 ID",
+      "type": "array",
+      "description": "你的系统里已存的帖子 ID。Actor 从最新可见帖子开始，遇到第一个匹配 ID 即停止，最适合无重复花费的定时监控。",
+      "editor": "stringList",
+      "sectionCaption": "Incremental monitoring",
+      "items": {
+        "type": "string"
+      }
+    },
+    "startCursor": {
+      "title": "起始游标",
+      "type": "string",
+      "description": "SUMMARY.pointer.nextCursor 中的游标，用于单个个人主页的更早历史回填。不要拿昨天的游标找新帖子，也不要把一个主页的游标用于另一个。",
+      "editor": "textarea",
+      "sectionCaption": "Historical backfill"
+    },
+    "includeRawPayload": {
+      "title": "包含原始数据",
+      "type": "boolean",
+      "description": "在每条结果中附带解析后的 Facebook 原始数据。仅在调试或研究结构时开启，输出会大很多。",
+      "editor": "checkbox",
+      "default": false,
+      "sectionCaption": "Advanced controls"
+    },
+    "includeUnavailablePosts": {
+      "title": "包含不可用动态卡片",
+      "type": "boolean",
+      "description": "返回那些分享或关联内容已被删除或受限的动态卡片。默认关闭，以免空卡片占用帖子名额。",
+      "editor": "checkbox",
+      "default": false,
+      "sectionCaption": "Advanced controls"
+    },
+    "bootstrapRetries": {
+      "title": "初始化重试",
+      "type": "integer",
+      "description": "个人主页解析与初始化失败时，全新代理/会话的重试次数。",
+      "editor": "number",
+      "default": 4,
+      "minimum": 1,
+      "maximum": 10,
+      "sectionCaption": "Advanced controls"
+    },
+    "graphqlPageRetries": {
+      "title": "翻页重试",
+      "type": "integer",
+      "description": "遇到临时性空白、被限流或失败的时间线页面时的重试次数。",
+      "editor": "number",
+      "default": 4,
+      "minimum": 0,
+      "maximum": 5,
+      "sectionCaption": "Advanced controls"
+    },
+    "proxyCountry": {
+      "title": "代理国家",
+      "type": "string",
+      "description": "Apify 住宅代理的国家代码（两位字母）。",
+      "editor": "textfield",
+      "default": "US",
+      "sectionCaption": "Advanced controls"
+    },
+    "fallbackProxyCountries": {
+      "title": "限流备用国家",
+      "type": "array",
+      "description": "仅当 Facebook 在主要国家临时限流或拒绝某个个人主页时，才依次尝试的最多三个住宅代理备用国家。",
+      "editor": "stringList",
+      "default": [
+        "DE",
+        "GB",
+        "NL"
+      ],
+      "maxItems": 3,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z]{2}$"
+      },
+      "sectionCaption": "Advanced controls"
+    },
+    "mediaExpansionConcurrency": {
+      "title": "照片展开并发",
+      "type": "integer",
+      "description": "可同时展开公开照片集的帖子数。",
+      "editor": "number",
+      "default": 3,
+      "minimum": 1,
+      "maximum": 8,
+      "sectionCaption": "Advanced controls"
+    },
+    "mediaSetRetries": {
+      "title": "照片集重试",
+      "type": "integer",
+      "description": "每个 Facebook media/set 或永久链接展开请求的重试次数。",
+      "editor": "number",
+      "default": 1,
+      "minimum": 0,
+      "maximum": 5,
+      "sectionCaption": "Advanced controls"
+    },
+    "debug": {
+      "title": "调试输出",
+      "type": "boolean",
+      "description": "在 SUMMARY 中附带发现过程与响应诊断信息。",
+      "editor": "checkbox",
+      "default": false,
+      "sectionCaption": "Advanced controls"
+    }
+  },
+  "required": [
+    "profileUrls"
+  ]
+}
